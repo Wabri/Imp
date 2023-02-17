@@ -1,11 +1,11 @@
 /*
 Copyright © 2023 Gabriele Puliti <gabriele.puliti+github@proton.me>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"imp/addons/gitlab"
 
 	"github.com/spf13/cobra"
 )
@@ -16,7 +16,7 @@ var gitlabCmd = &cobra.Command{
 	Short: "Gitlab service management",
 	Long: `Reach your gitlab service.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("gitlab called")
+		fmt.Println(gitlab.RequestHandler)
 	},
 }
 
