@@ -15,11 +15,13 @@ var gitlabCmd = &cobra.Command{
 	Use:   "gitlab",
 	Short: "Gitlab service management",
 	Long: `Reach your gitlab service.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(gitlab.RequestHandler)
-	},
+	Run: gitlabRun,
 }
 
 func init() {
 	rootCmd.AddCommand(gitlabCmd)
+}
+
+func gitlabRun(cmd *cobra.Command, args []string) {
+    fmt.Println(gitlab.RequestHandler)
 }

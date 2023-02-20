@@ -5,12 +5,13 @@ package cmd
 
 import (
 	"fmt"
-	"imp/addons/gitlab"
-	"os"
-	"strconv"
 
 	"github.com/spf13/cobra"
+
+	"imp/addons/gitlab"
 )
+
+var hook_id int
 
 // hooksCmd represents the hook command
 var hooksCmd = &cobra.Command{
@@ -18,15 +19,18 @@ var hooksCmd = &cobra.Command{
 	Short: "Get list of gitlab project hooks",
 	Long: `Get list of gitlab project hooks`,
     Run: func(cmd *cobra.Command, args []string) {
-        id, err := strconv.Atoi(args[0])
-        if err != nil {
-            fmt.Printf("Something is wrong with the input: %v\n", args[0])
-            os.Exit(1)
+        for _, hook := range gitlab.GetProjectHooksById(id) {
+            if hook_id == -1 {
+                fmt.Println(hook)
+            } else if hook.Id == hook_id {
+                fmt.Println(hook)
+                break
+            }
         }
-        fmt.Println(gitlab.GetProjectHooksById(id)) 
     },
 }
 
 func init() {
 	projectCmd.AddCommand(hooksCmd)
+    hooksCmd.PersistentFlags().IntVar(&hook_id, "hook-id", -1, "gitlab hook id")
 }

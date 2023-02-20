@@ -40,8 +40,7 @@ func GetRequest(requestHandler RequestHandler) []byte {
         return nil
     }
 
-    client := &http.Client{}
-    response, err := client.Do(request)
+    response, err := http.DefaultClient.Do(request)
     if err != nil {
         fmt.Println("Oh no, something went wrong!")
         return nil
@@ -56,4 +55,3 @@ func GetRequest(requestHandler RequestHandler) []byte {
 
     return body
 }
-

@@ -6,11 +6,11 @@ package cmd
 import (
 	"fmt"
 	"imp/addons/gitlab"
-	"os"
-	"strconv"
 
 	"github.com/spf13/cobra"
 )
+
+var id int
 
 // projectCmd represents the project command
 var projectCmd = &cobra.Command{
@@ -18,15 +18,11 @@ var projectCmd = &cobra.Command{
 	Short: "Get github project by id",
 	Long: `Get github project by id`,
 	Run: func(cmd *cobra.Command, args []string) {
-        id, err := strconv.Atoi(args[0])
-        if err != nil {
-            fmt.Printf("Something is wrong with the input: %v\n", args[0])
-            os.Exit(1)
-        }
         fmt.Println(gitlab.GetProjectById(id)) 
 	},
 }
 
 func init() {
 	gitlabCmd.AddCommand(projectCmd)
+    projectCmd.PersistentFlags().IntVar(&id, "id", -1, "gitlab project id")
 }
