@@ -48,3 +48,12 @@ func PutProjectHooksById(id int, hook Hook) bool {
     RequestHandler.Url = base_url + api_prefix
     return valid
 }
+
+func DeleteProjectHooksById(id int, hook_id int) bool {
+    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id) + "/hooks/" + strconv.Itoa(hook_id)
+
+    result := http.DeleteRequest(RequestHandler)
+    
+    RequestHandler.Url = base_url + api_prefix
+    return result
+}

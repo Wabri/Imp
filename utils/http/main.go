@@ -55,3 +55,21 @@ func GetRequest(requestHandler RequestHandler) []byte {
 
     return body
 }
+
+func DeleteRequest(requestHandler RequestHandler) bool {
+    request, err := http.NewRequest(http.MethodDelete, requestHandler.Url, nil)
+    request.Header.Set(requestHandler.TokenHeader, requestHandler.Token)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+        return false
+    }
+
+    response, err := http.DefaultClient.Do(request)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+        return false
+    }
+    defer response.Body.Close()
+
+    return true
+}
