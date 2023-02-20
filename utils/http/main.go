@@ -37,20 +37,21 @@ func GetRequest(requestHandler RequestHandler) []byte {
     request.Header.Set(requestHandler.TokenHeader, requestHandler.Token)
     if err != nil {
         fmt.Println("Oh no, something went wrong!")
+        return nil
     }
 
-    client := &http.Client{}
-    response, err := client.Do(request)
+    response, err := http.DefaultClient.Do(request)
     if err != nil {
         fmt.Println("Oh no, something went wrong!")
+        return nil
     }
 
     defer response.Body.Close()
     body, err := ioutil.ReadAll(response.Body)
     if err != nil {
         fmt.Println("Oh no, something went wrong!")
+        return nil
     }
 
     return body
 }
-
