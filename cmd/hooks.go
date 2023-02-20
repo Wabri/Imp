@@ -49,6 +49,6 @@ func init() {
     hooksCmd.PersistentFlags().IntVar(&hook_id, "hook-id", -1, "gitlab hook id")
     hooksCmd.PersistentFlags().StringVar(&action, "action", "", `Action to do with hook: 
     - delete
-    - update (with more args)
+    // todo #10 : - update (with more args)
     `)
 }
