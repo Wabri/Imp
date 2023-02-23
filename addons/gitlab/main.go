@@ -57,3 +57,15 @@ func DeleteProjectHooksById(id int, hook_id int) bool {
     RequestHandler.Url = base_url + api_prefix
     return result
 }
+
+func SearchOnProjectById(id int, search string) []SearchResult{
+    var searchResult []SearchResult
+    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id) + "/search?scope=blobs&search=" + search
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &searchResult) 
+
+    RequestHandler.Url = base_url + api_prefix
+
+    return searchResult
+}
