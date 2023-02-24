@@ -10,7 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var id int
+var projectId int
+var projectAction string
 
 // projectCmd represents the project command
 var projectCmd = &cobra.Command{
@@ -18,11 +19,19 @@ var projectCmd = &cobra.Command{
 	Short: "Get github project by id",
 	Long: `Get github project by id`,
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println(gitlab.GetProjectById(id)) 
+        switch projectAction {
+        case "search-code":
+            fmt.Println(gitlab.SearchOnProjectById(projectId, args[0]))
+        default:
+            fmt.Println(gitlab.GetProjectById(projectId)) 
+        }
 	},
 }
 
 func init() {
 	gitlabCmd.AddCommand(projectCmd)
-    projectCmd.PersistentFlags().IntVar(&id, "id", -1, "gitlab project id")
+    projectCmd.PersistentFlags().IntVar(&projectId, "id", -1, "gitlab project id")
+    projectCmd.PersistentFlags().StringVar(&projectAction, "action", "", `Action to do with hook: 
+    - search-code
+    `)
 }

@@ -12,3 +12,15 @@ type Hook struct {
     ProjectId int `json:"project_id"`
     SslEnable bool `json:"enable_ssl_verification"`
 }
+
+type SearchResult struct {
+    Basename string `json:"basename"`
+    Data string `json:"data"`
+    Path string `json:"path"`
+    Filename string `json:"filename"`
+    Id string `json:"id"`
+    Ref string `json:"ref"`
+    Startline string `json:"startline"`
+    Project_id string `json:"project_id"`
+}
+
