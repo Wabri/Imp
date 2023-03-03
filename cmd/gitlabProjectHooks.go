@@ -11,19 +11,19 @@ import (
 	"imp/addons/gitlab"
 )
 
-var hookId int
-var hookAction string
+var gitlabProjectHookId int
+var gitlabProjectHookAction string
 
 // hooksCmd represents the hook command
-var hooksCmd = &cobra.Command{
+var gitlabProjectHooksCmd = &cobra.Command{
 	Use:   "hooks",
 	Short: "Get list of gitlab project hooks",
 	Long: `Get list of gitlab project hooks`,
     Run: func(cmd *cobra.Command, args []string) {
-        switch hookAction {
+        switch gitlabProjectHookAction {
         case "delete":
-            if hookId != -1 {
-                if gitlab.DeleteProjectHooksById(projectId, hookId) {
+            if gitlabProjectHookId != -1 {
+                if gitlab.DeleteProjectHooksById(gitlabProjectId, gitlabProjectHookId) {
                     fmt.Println("Hook remove succesfully")
                 } else {
                     fmt.Println("ERROR: Hook not remove")
@@ -32,10 +32,10 @@ var hooksCmd = &cobra.Command{
                 fmt.Println("Need a hook-id to delete a hook!")
             }
         default:
-            for _, hook := range gitlab.GetProjectHooksById(projectId) {
-                if hookId == -1 {
+            for _, hook := range gitlab.GetProjectHooksById(gitlabProjectId) {
+                if gitlabProjectHookId == -1 {
                     fmt.Println(hook)
-                } else if hook.Id == hookId {
+                } else if hook.Id == gitlabProjectHookId {
                     fmt.Println(hook)
                     break
                 }
@@ -45,9 +45,9 @@ var hooksCmd = &cobra.Command{
 }
 
 func init() {
-	projectCmd.AddCommand(hooksCmd)
-    hooksCmd.PersistentFlags().IntVar(&hookId, "hook-id", -1, "gitlab hook id")
-    hooksCmd.PersistentFlags().StringVar(&hookAction, "action", "", `Action to do with hook: 
+	gitlabProjectCmd.AddCommand(gitlabProjectHooksCmd)
+    gitlabProjectHooksCmd.PersistentFlags().IntVar(&gitlabProjectHookId, "hook-id", -1, "gitlab hook id")
+    gitlabProjectHooksCmd.PersistentFlags().StringVar(&gitlabProjectHookAction, "action", "", `Action to do with hook: 
     - delete
     // todo #10 : - update (with more args)
     `)
