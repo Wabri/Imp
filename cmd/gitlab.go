@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"imp/addons/gitlab"
+	"imp/utils/output"
 
 	"github.com/spf13/cobra"
 )
@@ -23,5 +24,5 @@ func init() {
 }
 
 func gitlabRun(cmd *cobra.Command, args []string) {
-    fmt.Println(gitlab.RequestHandler)
+    fmt.Println(output.AnyToString(gitlab.RequestHandler))
 }
