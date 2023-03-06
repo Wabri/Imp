@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"imp/addons/gitlab"
+	"imp/utils/output"
 
 	"github.com/spf13/cobra"
 )
@@ -21,9 +22,11 @@ var gitlabProjectCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
         switch gitlabProjectAction {
         case "search-code":
-            fmt.Println(gitlab.SearchOnProjectById(gitlabProjectId, args[0]))
+            project := gitlab.SearchOnProjectById(gitlabProjectId, args[0])
+            fmt.Println(output.AnyToString(project))
         default:
-            fmt.Println(gitlab.GetProjectById(gitlabProjectId)) 
+            project := gitlab.GetProjectById(gitlabProjectId)
+            fmt.Println(output.AnyToString(project))
         }
 	},
 }

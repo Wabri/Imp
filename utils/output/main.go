@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+
 func AnyToString(input any) string {
     output, err := json.Marshal(input)
     if err != nil {

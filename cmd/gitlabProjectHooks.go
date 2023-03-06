@@ -24,13 +24,11 @@ var gitlabProjectHooksCmd = &cobra.Command{
         switch gitlabProjectHookAction {
         case "delete":
             if gitlabProjectHookId != -1 {
-                if gitlab.DeleteProjectHooksById(gitlabProjectId, gitlabProjectHookId) {
-                    fmt.Println("Hook remove succesfully")
-                } else {
-                    fmt.Println("ERROR: Hook not remove")
+                if !gitlab.DeleteProjectHooksById(gitlabProjectId, gitlabProjectHookId) {
+                    panic("ERROR: Hook not remove")
                 }
             } else {
-                fmt.Println("Need a hook-id to delete a hook!")
+                panic("Need a hook-id to delete a hook!")
             }
         default:
             hooks := gitlab.GetProjectHooksById(gitlabProjectId)
