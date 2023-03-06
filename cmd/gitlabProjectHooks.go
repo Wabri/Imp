@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"imp/addons/gitlab"
+	"imp/utils/output"
 )
 
 var gitlabProjectHookId int
@@ -32,14 +33,8 @@ var gitlabProjectHooksCmd = &cobra.Command{
                 fmt.Println("Need a hook-id to delete a hook!")
             }
         default:
-            for _, hook := range gitlab.GetProjectHooksById(gitlabProjectId) {
-                if gitlabProjectHookId == -1 {
-                    fmt.Println(hook)
-                } else if hook.Id == gitlabProjectHookId {
-                    fmt.Println(hook)
-                    break
-                }
-            }
+            hooks := gitlab.GetProjectHooksById(gitlabProjectId)
+            fmt.Println(output.AnyToString(hooks))
         }
     },
 }
@@ -47,7 +42,7 @@ var gitlabProjectHooksCmd = &cobra.Command{
 func init() {
 	gitlabProjectCmd.AddCommand(gitlabProjectHooksCmd)
     gitlabProjectHooksCmd.PersistentFlags().IntVar(&gitlabProjectHookId, "hook-id", -1, "gitlab hook id")
-    gitlabProjectHooksCmd.PersistentFlags().StringVar(&gitlabProjectHookAction, "action", "", `Action to do with hook: 
+    gitlabProjectHooksCmd.Flags().StringVar(&gitlabProjectHookAction, "action", "", `Action to do with hook: 
     - delete
     // todo #10 : - update (with more args)
     `)

@@ -31,7 +31,7 @@ var gitlabProjectCmd = &cobra.Command{
 func init() {
 	gitlabCmd.AddCommand(gitlabProjectCmd)
     gitlabProjectCmd.PersistentFlags().IntVar(&gitlabProjectId, "id", -1, "gitlab project id")
-    gitlabProjectCmd.PersistentFlags().StringVar(&gitlabProjectAction, "action", "", `Action to do with hook: 
+    gitlabProjectCmd.Flags().StringVar(&gitlabProjectAction, "action", "", `Action to do with hook: 
     - search-code
     `)
 }
