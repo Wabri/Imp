@@ -2,6 +2,8 @@ package gitlab
 
 import (
 	"encoding/json"
+	"reflect"
+	"regexp"
 	"strconv"
 
 	"imp/utils/http"
@@ -35,14 +37,37 @@ func GetProjectHooksById(id int) []Hook {
     return hooks
 }
 
-func PutProjectHooksById(id int, hook Hook) bool {
-    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id) + "/hooks/" + strconv.Itoa(hook.Id) 
+func GetProjectHookById(idProject int, idHook int) Hook {
+    var hook Hook
+    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(idProject) + "/hooks/" + strconv.Itoa(idHook)
 
-    payload := make([][2]string, 2)
-    payload[0][0] = "url"
-    payload[0][1] = hook.Url
-    payload[1][0] = "enable_ssl_verification"
-    payload[1][1] = strconv.FormatBool(hook.SslEnable)
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &hook)
+    
+    RequestHandler.Url = base_url + api_prefix
+    return hook
+}
+
+func PutProjectHooksById(id int, hookId int, hook Hook) bool {
+    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id) + "/hooks/" + strconv.Itoa(hookId) 
+
+    values := reflect.ValueOf(hook)
+    types := values.Type()
+    re := regexp.MustCompile(`json:\"([^ ]+)\"`)
+    payload := make([][2]string, values.NumField())
+    for i := 0; i < values.NumField(); i++ {
+	match := re.FindStringSubmatch(string(types.Field(i).Tag))[1]
+	payload[i][0] = match
+	switch values.Field(i).Type().String() {
+	case "int":
+	    payload[i][1] = strconv.FormatInt(values.Field(i).Int(), 10)
+	case "bool":
+	    payload[i][1] = strconv.FormatBool(values.Field(i).Bool())
+	case "string":
+	    payload[i][1] = values.Field(i).String()
+	}
+    }
+
     valid := http.PutRequest(RequestHandler, payload)
 
     RequestHandler.Url = base_url + api_prefix
