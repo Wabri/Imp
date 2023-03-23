@@ -16,7 +16,6 @@ var isRepositoriesList bool
 var notUsedSince string
 var deleteArtifact string
 
-// hooksCmd represents the hook command
 var artifactoryRepositoryCmd = &cobra.Command{
 	Use:   "repository",
 	Short: "Get list of repositories",
@@ -49,8 +48,14 @@ var artifactoryRepositoryCmd = &cobra.Command{
 }
 
 func init() {
-	artifactoryCmd.AddCommand(artifactoryRepositoryCmd)
+    artifactoryCmd.AddCommand(artifactoryRepositoryCmd)
     artifactoryRepositoryCmd.Flags().BoolVar(&isRepositoriesList, "list", false, `List of all repositories`)
-    artifactoryRepositoryCmd.Flags().StringVar(&notUsedSince, "not-used-since", "", ``)
-    artifactoryRepositoryCmd.Flags().StringVar(&deleteArtifact, "delete-artifact", "", ``)
+    artifactoryRepositoryCmd.Flags().StringVar(&notUsedSince, "not-used-since", "", `List all the artifact of a repository not used by a specified date
+Examples:
+    - imp artifactory repository test-local --not-used-since 2023-03-14
+    `)
+    artifactoryRepositoryCmd.Flags().StringVar(&deleteArtifact, "delete-artifact", "", `Remove the artifact on a specified repository
+Examples:
+    - imp artifactory repository test-local --delete-artifact test/local/1.2.3/artifact.json
+    `)
 }
