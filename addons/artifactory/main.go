@@ -13,6 +13,29 @@ var RequestHandler http.RequestHandler = http.RequestHandler{
     Token: token,
 }
 
+func GetArtifactByName(name string) Artifact {
+    var artifact Artifact
+    RequestHandler.Url = RequestHandler.Url + "/storage/" + name
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &artifact) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return artifact
+}
+
+func GetRepositoryByName(name string) Repository {
+    var repositorie Repository
+    RequestHandler.Url = RequestHandler.Url + "/repositories/" + name
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &repositorie) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return repositorie
+}
+
+
 func GetRepositories() []Repository {
     var repositories []Repository
     RequestHandler.Url = RequestHandler.Url + "/repositories"
