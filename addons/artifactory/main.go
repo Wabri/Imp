@@ -13,6 +13,29 @@ var RequestHandler http.RequestHandler = http.RequestHandler{
     Token: token,
 }
 
+func GetArtifactByName(name string) Artifact {
+    var artifact Artifact
+    RequestHandler.Url = RequestHandler.Url + "/storage/" + name
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &artifact) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return artifact
+}
+
+func GetRepositoryByName(name string) Repository {
+    var repositorie Repository
+    RequestHandler.Url = RequestHandler.Url + "/repositories/" + name
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &repositorie) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return repositorie
+}
+
+
 func GetRepositories() []Repository {
     var repositories []Repository
     RequestHandler.Url = RequestHandler.Url + "/repositories"
@@ -24,14 +47,29 @@ func GetRepositories() []Repository {
     return repositories
 }
 
-func GetArtifactNotUsedSinceForRepository(repository string, date string) []RepositoryNotUsedSince {
+func GetArtifactsOfRepository(repository string, path string) []Artifact{
+    RequestHandler.Url = RequestHandler.Url + "/storage/" + repository + "/" + path
+
+    type StorageArtifactResponse struct {
+        Artifacts []Artifact `json:"children"`
+    }
+    var response StorageArtifactResponse
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &response) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return response.Artifacts
+}
+
+func GetArtifactNotUsedSinceForRepository(repository string, date string) []Artifact {
     since, err := time.Parse("2006-01-02", date)
     if err != nil {
         panic(err)
     }
 
     type RepositoryResponse struct {
-        Repository []RepositoryNotUsedSince `json:"results"`
+        Repositories []Artifact `json:"results"`
     }
     var response RepositoryResponse
 
@@ -41,7 +79,7 @@ func GetArtifactNotUsedSinceForRepository(repository string, date string) []Repo
     json.Unmarshal(raw, &response) 
 
     RequestHandler.Url = base_url + api_prefix
-    return response.Repository
+    return response.Repositories
 }
 
 func DeleteArtifact(repository string, artifact string) bool {
