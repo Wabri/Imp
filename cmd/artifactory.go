@@ -25,9 +25,11 @@ var artifactoryCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(artifactoryCmd)
-	artifactoryCmd.Flags().StringVar(&artifact, "", "", `Set artifact`)
-	artifactoryCmd.PersistentFlags().StringVar(&repository, "", "", `Set repository`)
-	artifactoryCmd.Flags().StringVar(&artifactoryAction, "artifactory", "", `Action to do with hook: 
+	artifactoryCmd.Flags().StringVar(&artifact, "artifact", "", `Set artifact`)
+	artifactoryCmd.PersistentFlags().StringVar(&repository, "repository", "", `Set repository`)
+	artifactoryCmd.Flags().StringVar(&artifactoryAction, "action", "", `Action to do with hook: 
+	- artifact-list -> Get the list on a specified repository
+	    e.g.: imp artifactory --repository test-local --action artifact-list test/local/1.2.3/
 	- not-used-since -> List all the artifact of a repository not used by a specified date
 	    e.g.: imp artifactory --repository test-local --action not-used-since 2023-03-14
 	- delete-artifact -> Remove the artifact on a specified repository
@@ -37,6 +39,12 @@ func init() {
 
 func artifactoryRun(cmd *cobra.Command, args []string) {
 	switch artifactoryAction {
+	case "artifact-list":
+		validate(repository)
+		path := args[0]
+		repositories := artifactory.GetArtifactsOfRepository(repository, path)
+		fmt.Println(output.AnyToString(repositories))
+		return
 	case "not-used-since":
 		validate(repository)
 		notUsedSince := args[0]
