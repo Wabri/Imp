@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -35,6 +36,32 @@ func PutRequest(requestHandler RequestHandler, payload [][2]string) bool {
 func GetRequest(requestHandler RequestHandler) []byte {
     request, err := http.NewRequest(http.MethodGet, requestHandler.Url, nil)
     request.Header.Set(requestHandler.TokenHeader, requestHandler.Token)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+        return nil
+    }
+
+    response, err := http.DefaultClient.Do(request)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+        return nil
+    }
+
+    defer response.Body.Close()
+    body, err := ioutil.ReadAll(response.Body)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+        return nil
+    }
+
+    return body
+}
+
+func PostRequestTextPlain(requestHandler RequestHandler) []byte {
+    data := []byte(requestHandler.Data)
+    request, err := http.NewRequest(http.MethodPost, requestHandler.Url, bytes.NewBuffer(data))
+    request.Header.Set(requestHandler.TokenHeader, requestHandler.Token)
+    request.Header.Set("Content-Type", "text/plain")
     if err != nil {
         fmt.Println("Oh no, something went wrong!")
         return nil

@@ -15,7 +15,7 @@ import (
 var gitlabCmd = &cobra.Command{
 	Use:   "gitlab",
 	Short: "Gitlab service management",
-	Long: `Reach your gitlab service.`,
+	Aliases: []string{"g", "gl"},
 	Run: gitlabRun,
 }
 

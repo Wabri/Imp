@@ -13,31 +13,8 @@ var RequestHandler http.RequestHandler = http.RequestHandler{
     Token: token,
 }
 
-func GetArtifactByName(name string) Artifact {
-    var artifact Artifact
-    RequestHandler.Url = RequestHandler.Url + "/storage/" + name
-
-    raw := http.GetRequest(RequestHandler)
-    json.Unmarshal(raw, &artifact) 
-
-    RequestHandler.Url = base_url + api_prefix
-    return artifact
-}
-
-func GetRepositoryByName(name string) Repository {
-    var repositorie Repository
-    RequestHandler.Url = RequestHandler.Url + "/repositories/" + name
-
-    raw := http.GetRequest(RequestHandler)
-    json.Unmarshal(raw, &repositorie) 
-
-    RequestHandler.Url = base_url + api_prefix
-    return repositorie
-}
-
-
-func GetRepositories() []Repository {
-    var repositories []Repository
+func GetRepositories() []Item {
+    var repositories []Item
     RequestHandler.Url = RequestHandler.Url + "/repositories"
 
     raw := http.GetRequest(RequestHandler)
@@ -47,31 +24,51 @@ func GetRepositories() []Repository {
     return repositories
 }
 
-func GetArtifactsOfRepository(repository string, path string) []Artifact{
-    RequestHandler.Url = RequestHandler.Url + "/storage/" + repository + "/" + path
+func GetArtifacts(path string) []Item{
+    RequestHandler.Url = RequestHandler.Url + "/storage/" + path
 
-    type StorageArtifactResponse struct {
-        Artifacts []Artifact `json:"children"`
+    type Response struct {
+        Item []Item `json:"children"`
     }
-    var response StorageArtifactResponse
+    var response Response
 
     raw := http.GetRequest(RequestHandler)
     json.Unmarshal(raw, &response) 
 
     RequestHandler.Url = base_url + api_prefix
-    return response.Artifacts
+    return response.Item
 }
 
-func GetArtifactNotUsedSinceForRepository(repository string, date string) []Artifact {
+func GetItemInfos(repository string, path string) []Item {
+    RequestHandler.Url = RequestHandler.Url + "/search/aql"
+    if len(path) == 0 {
+	RequestHandler.Data = "items.find({\"repo\":\"" + repository + "\"})"
+    } else {
+        RequestHandler.Data = "items.find({\"repo\":\"" + repository + "\", \"path\":\"" + path + "\"})"
+    }
+
+    type Response struct {
+        Item []Item `json:"results"`
+    }
+    var response Response
+
+    raw := http.PostRequestTextPlain(RequestHandler)
+    json.Unmarshal(raw, &response) 
+
+    RequestHandler.Url = base_url + api_prefix
+    return response.Item
+}
+
+func GetArtifactNotUsedSinceForRepository(repository string, date string) []Item {
     since, err := time.Parse("2006-01-02", date)
     if err != nil {
         panic(err)
     }
 
-    type RepositoryResponse struct {
-        Repositories []Artifact `json:"results"`
+    type Response struct {
+        Repositories []Item `json:"results"`
     }
-    var response RepositoryResponse
+    var response Response
 
     RequestHandler.Url = RequestHandler.Url + "/search/usage?notUsedSince=" + strconv.FormatInt(since.UnixMilli(), 10) + "&repos=" + repository
 

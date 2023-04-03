@@ -1,13 +1,6 @@
 package artifactory
 
-type Repository struct {
-    Key string `json:"key"`
-    Type string `json:"type"`
-    Url string `json:"url"`
-    PackageType string `json:"packageType"`
-}
-
-type Artifact struct {
+type Item struct {
     Uri string `json:"uri"`
     Repo string `json:"repo"`
     Path string `json:"path"`
@@ -17,8 +10,12 @@ type Artifact struct {
     LastModified string `json:"lastModified"`
     ModifiedBy string `json:"modifiedBy"`
     LastUpdated string `json:"lastUpdated"`
-    Size string `json:"size"`
+    Size int `json:"size"`
     Folder bool `json:"folder"`
     DownloadCount int `json:"downloadCount"`
     LastDownloaded string `json:"lastDownloaded"`
+    Key string `json:"key"`
+    Type string `json:"type"`
+    Url string `json:"url"`
+    PackageType string `json:"packageType"`
 }
