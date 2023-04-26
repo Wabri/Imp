@@ -75,8 +75,9 @@ func artifactoryRun(cmd *cobra.Command, args []string) {
 		return
 	case "get-info":
 		if !valid(repository) { return }
-		if !valid(args[0]) { return }
-		items := artifactory.GetItemInfos(repository, args[0])
+		path := ""
+		if len(args) != 0 { path = args[0]}
+		items := artifactory.GetItemInfos(repository, path)
 		fmt.Println(output.AnyToString(items))
 		return
 	default:
