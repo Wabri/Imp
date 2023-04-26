@@ -10,7 +10,7 @@ type Item struct {
     LastModified string `json:"lastModified"`
     ModifiedBy string `json:"modifiedBy"`
     LastUpdated string `json:"lastUpdated"`
-    Size int `json:"size"`
+    Size string `json:"size"`
     Folder bool `json:"folder"`
     DownloadCount int `json:"downloadCount"`
     LastDownloaded string `json:"lastDownloaded"`
