@@ -74,6 +74,16 @@ func PutProjectHooksById(id int, hookId int, hook Hook) bool {
     return valid
 }
 
+func ChangeSettingById(id int, key string, value string) bool {
+    RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id)
+    payload :=  [][2]string{{key,value}}
+
+    result := http.PutRequest(RequestHandler, payload)
+
+    RequestHandler.Url = base_url + api_prefix
+    return result
+}
+
 func DeleteProjectHooksById(id int, hook_id int) bool {
     RequestHandler.Url = RequestHandler.Url + "/projects/" + strconv.Itoa(id) + "/hooks/" + strconv.Itoa(hook_id)
 
