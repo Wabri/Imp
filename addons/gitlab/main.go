@@ -104,3 +104,47 @@ func SearchOnProjectById(id int, search string) []SearchResult{
 
     return searchResult
 }
+
+func GetProjectsByGroup(id int) []Project {
+    var projects []Project
+    RequestHandler.Url = RequestHandler.Url + "/groups/" + strconv.Itoa(id) + "/projects"
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &projects) 
+    
+    RequestHandler.Url = base_url + api_prefix
+    return projects
+}
+
+func GetGroupById(id int) Project {
+    var group Project
+    RequestHandler.Url = RequestHandler.Url + "/groups/" + strconv.Itoa(id)
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &group) 
+    
+    RequestHandler.Url = base_url + api_prefix
+    return group
+}
+
+func GetGroups() []Project {
+    var groups []Project
+    RequestHandler.Url = RequestHandler.Url + "/groups"
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &groups) 
+    
+    RequestHandler.Url = base_url + api_prefix
+    return groups
+}
+
+func SearchGroup(element string) []Project {
+    var groups []Project
+    RequestHandler.Url = RequestHandler.Url + "/groups?search=" + element
+
+    raw := http.GetRequest(RequestHandler)
+    json.Unmarshal(raw, &groups) 
+    
+    RequestHandler.Url = base_url + api_prefix
+    return groups
+}
