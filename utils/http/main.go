@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -99,4 +100,33 @@ func DeleteRequest(requestHandler RequestHandler) bool {
     defer response.Body.Close()
 
     return true
+}
+
+
+func GetRequestOnPage(requestHandler RequestHandler, page int) ([]byte, int) {
+
+    endpoint := requestHandler.Url + "?page=" + strconv.Itoa(page)
+    request, err := http.NewRequest(http.MethodGet, endpoint, nil)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+    }
+
+    request.Header.Set(requestHandler.TokenHeader, requestHandler.Token)
+    response, err := http.DefaultClient.Do(request)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+    }
+
+    defer response.Body.Close()
+    body, err := ioutil.ReadAll(response.Body)
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+    }
+
+    pages, err := strconv.Atoi(response.Header.Get("x-total")) 
+    if err != nil {
+        fmt.Println("Oh no, something went wrong!")
+    }
+
+    return body, pages
 }
