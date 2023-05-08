@@ -109,9 +109,17 @@ func GetProjectsByGroup(id int) []Project {
     var projects []Project
     RequestHandler.Url = RequestHandler.Url + "/groups/" + strconv.Itoa(id) + "/projects"
 
-    raw := http.GetRequest(RequestHandler)
-    json.Unmarshal(raw, &projects) 
-    
+    raw, pages := http.GetRequestOnPage(RequestHandler, 1)
+    var projectsTemp[]Project
+    json.Unmarshal(raw, &projectsTemp)
+    projects = append(projects, projectsTemp...)
+
+    for page := 2; page < pages; page++ {
+        raw, _ := http.GetRequestOnPage(RequestHandler, page)
+        json.Unmarshal(raw, &projectsTemp)
+	projects = append(projects, projectsTemp...)
+    }
+
     RequestHandler.Url = base_url + api_prefix
     return projects
 }
