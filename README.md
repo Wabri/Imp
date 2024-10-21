@@ -13,7 +13,7 @@
   <h1>Imp</h1>
   
   <a href="https://github.com/Wabri/Imp">
-    <img src="resources/logo.jpg" alt="Logo" width="80" height="80">
+    <img src="resources/logo.jpg" alt="Logo" width="280" height="280">
   </a>
 
   <p align="center">
